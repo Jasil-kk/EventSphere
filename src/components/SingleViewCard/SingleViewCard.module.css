@@ -1,0 +1,39 @@
+.singleViewCard_main {
+  width: 100%;
+  height: auto;
+  padding: 1rem 5% 0 5%;
+}
+.card {
+  position: relative;
+}
+.rating {
+  position: absolute;
+  top: 220px;
+  right: 2rem;
+}
+.review_container {
+  width: 75%;
+  height: auto;
+  padding: 2rem;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.review_form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+.review_list {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.review {
+  border: 1px solid #79067b;
+  border-radius: 15px;
+  padding: 1rem;
+}
