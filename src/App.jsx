@@ -13,6 +13,7 @@ import { TeamPanel } from "./panels/TeamPanel/TeamPanel";
 import { AllServices } from "./panels/TeamPanel/AllServices";
 import { Enquiries } from "./panels/TeamPanel/Enquiries";
 import { Notifications } from "./panels/TeamPanel/Notifications";
+import { Inbox } from "./panels/TeamPanel/Inbox";
 
 function App() {
   return (
@@ -33,10 +34,6 @@ function App() {
         <Route path="/enquiries" element={<Enquiries />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/inbox" element={<Inbox />} />
-
-
-
-
       </Routes>
     </div>
   );
