@@ -8,6 +8,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CampaignIcon from "@mui/icons-material/Campaign";
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import { useNavigate,useLocation } from "react-router-dom";
 
 export const AdminSidebar = () => {
@@ -44,7 +45,13 @@ export const AdminSidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Event Teams" />
         </ListItemButton>
-        <ListItemButton selected={isActive("/")}>
+        <ListItemButton selected={isActive("/addcategory")} onClick={() => navigate("/addcategory")}>
+          <ListItemIcon>
+            <LibraryAddIcon />
+          </ListItemIcon>
+          <ListItemText primary="Add Category" />
+        </ListItemButton>
+        <ListItemButton selected={isActive("/publishnotification")} onClick={() => navigate("/publishnotification")}>
           <ListItemIcon>
             <CampaignIcon />
           </ListItemIcon>

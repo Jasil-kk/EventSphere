@@ -6,27 +6,26 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { AdminLayout } from "../../layouts/AdminLayout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
+import Stack from "@mui/material/Stack";
 import { DeleteModal } from "../../components/modals/DeleteModal";
-import { TeamSingleView } from "../../components/modals/TeamSingleView";
+import { TeamLayout } from "../../layouts/TeamLayout";
+import { AddServiceModal } from "../../components/modals/AddServiceModal";
 
-export const AllEventTeams = () => {
+export const AllServices = () => {
   const [open, setOpen] = useState(false);
-  const [singleView, setSingleView] = useState(false);
+  const [addService, setAddService] = useState(false);
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
+  const handleAddService = () => {
+    setAddService(true);
+  };
 
-    setSingleView(open);
+  const handleAddServiceClose = () => {
+    setAddService(false);
   };
 
   const handleClickOpen = () => {
@@ -38,7 +37,7 @@ export const AllEventTeams = () => {
   };
 
   return (
-    <AdminLayout>
+    <TeamLayout>
       <Paper
         sx={{
           margin: "1rem",
@@ -47,11 +46,28 @@ export const AllEventTeams = () => {
           overflow: "hidden",
         }}
       >
-        <Typography variant="h6" component="h6" mb="0.5rem">
-          All Event Teams
-        </Typography>
+        <Stack
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+        >
+          <Typography variant="h6" component="h6" mb="0.5rem">
+            All Services
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+            onClick={handleAddService}
+          >
+            Add Service
+          </Button>
+        </Stack>
         <TableContainer
-          sx={{ maxHeight: "calc(100vh - 10rem)", border: "1px solid purple" }}
+          sx={{
+            marginTop: "0.5rem",
+            maxHeight: "calc(100vh - 10rem)",
+            border: "1px solid purple",
+          }}
         >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -72,7 +88,7 @@ export const AllEventTeams = () => {
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
-                  Team Name
+                  Service Name
                 </TableCell>
                 <TableCell
                   align="left"
@@ -81,30 +97,21 @@ export const AllEventTeams = () => {
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
-                  Username
+                  Category
                 </TableCell>
                 <TableCell
                   align="left"
                   style={{
-                    minWidth: 250,
+                    minWidth: 100,
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
-                  Email
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 200,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Phone
+                  Date
                 </TableCell>
                 <TableCell
                   align="right"
                   style={{
-                    minWidth: 100,
+                    minWidth: 200,
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
@@ -117,11 +124,15 @@ export const AllEventTeams = () => {
                 <TableCell align="left">1</TableCell>
                 <TableCell align="left">Muhammed Jasil</TableCell>
                 <TableCell align="left">jasil</TableCell>
-                <TableCell align="left">jasilkk2522@gmail.com</TableCell>
-                <TableCell align="left">9878787889</TableCell>
+                <TableCell align="left">12/01/2023</TableCell>
                 <TableCell align="right">
-                  <IconButton aria-label="delete" size="medium" color="info" onClick={toggleDrawer(true)}>
-                    <VisibilityIcon />
+                  <IconButton
+                    aria-label="delete"
+                    size="medium"
+                    color="info"
+                    onClick={handleAddService}
+                  >
+                    <EditIcon />
                   </IconButton>
                   <IconButton
                     aria-label="delete"
@@ -137,8 +148,12 @@ export const AllEventTeams = () => {
           </Table>
         </TableContainer>
       </Paper>
-      <TeamSingleView toggleDrawer={toggleDrawer} open={singleView}/>
-      <DeleteModal open={open} handleClose={handleClose} text="Are you sure you want to delete this Event Team?" />
-    </AdminLayout>
+      <AddServiceModal open={addService} handleClose={handleAddServiceClose} />
+      <DeleteModal
+        open={open}
+        handleClose={handleClose}
+        text="Are you sure you want to delete this Service?"
+      />
+    </TeamLayout>
   );
 };

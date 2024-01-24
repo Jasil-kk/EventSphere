@@ -6,28 +6,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { AdminLayout } from "../../layouts/AdminLayout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DeleteModal } from "../../components/modals/DeleteModal";
-import { TeamSingleView } from "../../components/modals/TeamSingleView";
+import { TeamLayout } from "../../layouts/TeamLayout";
 
-export const AllEventTeams = () => {
+export const Inbox = () => {
   const [open, setOpen] = useState(false);
-  const [singleView, setSingleView] = useState(false);
-
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
-    setSingleView(open);
-  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,7 +24,7 @@ export const AllEventTeams = () => {
   };
 
   return (
-    <AdminLayout>
+    <TeamLayout>
       <Paper
         sx={{
           margin: "1rem",
@@ -48,10 +34,15 @@ export const AllEventTeams = () => {
         }}
       >
         <Typography variant="h6" component="h6" mb="0.5rem">
-          All Event Teams
+          Inbox
         </Typography>
+
         <TableContainer
-          sx={{ maxHeight: "calc(100vh - 10rem)", border: "1px solid purple" }}
+          sx={{
+            marginTop: "0.5rem",
+            maxHeight: "calc(100vh - 10rem)",
+            border: "1px solid purple",
+          }}
         >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -72,39 +63,30 @@ export const AllEventTeams = () => {
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
-                  Team Name
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Username
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
                   Email
                 </TableCell>
                 <TableCell
                   align="left"
                   style={{
-                    minWidth: 200,
+                    minWidth: 250,
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
-                  Phone
+                  Subject
+                </TableCell>
+                <TableCell
+                  align="left"
+                  style={{
+                    minWidth: 250,
+                    backgroundColor: "rgb(223, 222, 222)",
+                  }}
+                >
+                  Date
                 </TableCell>
                 <TableCell
                   align="right"
                   style={{
-                    minWidth: 100,
+                    minWidth: 200,
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
@@ -115,14 +97,12 @@ export const AllEventTeams = () => {
             <TableBody>
               <TableRow>
                 <TableCell align="left">1</TableCell>
-                <TableCell align="left">Muhammed Jasil</TableCell>
-                <TableCell align="left">jasil</TableCell>
-                <TableCell align="left">jasilkk2522@gmail.com</TableCell>
-                <TableCell align="left">9878787889</TableCell>
+                <TableCell align="left">someone@gmail.com</TableCell>
+                <TableCell align="left">
+                  Lorem ipsum dolor sit, amet consectetur
+                </TableCell>
+                <TableCell align="left">12/01/2023</TableCell>
                 <TableCell align="right">
-                  <IconButton aria-label="delete" size="medium" color="info" onClick={toggleDrawer(true)}>
-                    <VisibilityIcon />
-                  </IconButton>
                   <IconButton
                     aria-label="delete"
                     size="medium"
@@ -137,8 +117,11 @@ export const AllEventTeams = () => {
           </Table>
         </TableContainer>
       </Paper>
-      <TeamSingleView toggleDrawer={toggleDrawer} open={singleView}/>
-      <DeleteModal open={open} handleClose={handleClose} text="Are you sure you want to delete this Event Team?" />
-    </AdminLayout>
+      <DeleteModal
+        open={open}
+        handleClose={handleClose}
+        text="Are you sure you want to delete this Message?"
+      />
+    </TeamLayout>
   );
 };
