@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,18 +9,75 @@ import TableRow from "@mui/material/TableRow";
 import { AdminLayout } from "../../layouts/AdminLayout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { DeleteModal } from "../../components/modals/DeleteModal";
+import { useDispatch, useSelector } from "react-redux";
+import { allUsersApi, userDeleteApi } from "../../store/adminSlice";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export const AllUsers = () => {
+  const [alert, setAlert] = useState({ open: false, type: "info", text: "" });
   const [open, setOpen] = useState(false);
+  const [userId, setUserId] = useState("");
+  const dispatch = useDispatch();
 
-  const handleClickOpen = () => {
+  const allUsers = useSelector((state) => state.admin.allUsers);
+  const totalUsers = useSelector((state) => state.admin.usersCount);
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ open: false, type: "", text: "" });
+  };
+
+  const handleClickOpen = (userId) => {
+    setUserId(userId);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  useEffect(() => {
+    dispatch(allUsersApi());
+  }, []);
+
+  const handleUserDelete = async () => {
+    try {
+      const response = await dispatch(userDeleteApi(userId));
+      if (response.payload && response.payload.status === 204) {
+        setAlert({
+          open: true,
+          type: "success",
+          text: "Deleted User successfully!",
+        });
+        dispatch(allUsersApi());
+        handleClose();
+      } else {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "User Deletion failed!",
+        });
+        handleClose();
+      }
+    } catch (error) {
+      setAlert({
+        open: true,
+        type: "error",
+        text: "User Deletion failed. Please try again.",
+      });
+      handleClose();
+    }
   };
   return (
     <AdminLayout>
@@ -32,9 +89,21 @@ export const AllUsers = () => {
           overflow: "hidden",
         }}
       >
-        <Typography variant="h6" component="h6" mb="0.5rem">
-          All Users
-        </Typography>
+        <Stack
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          mb={"0.25rem"}
+        >
+          <Typography variant="h6" component="h6">
+            All Users
+          </Typography>
+          <Chip
+            label={`total users: ${totalUsers}`}
+            variant="filled"
+            color="secondary"
+          />
+        </Stack>
         <TableContainer
           sx={{ maxHeight: "calc(100vh - 10rem)", border: "1px solid purple" }}
         >
@@ -98,23 +167,51 @@ export const AllUsers = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="left">1</TableCell>
-                <TableCell align="left">Muhammed Jasil</TableCell>
-                <TableCell align="left">jasil</TableCell>
-                <TableCell align="left">jasilkk2522@gmail.com</TableCell>
-                <TableCell align="left">9878787889</TableCell>
-                <TableCell align="right">
-                  <IconButton aria-label="delete" size="medium" color="error" onClick={handleClickOpen}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              {allUsers?.map((user, index) => (
+                <TableRow key={user?.id}>
+                  <TableCell align="left">{index + 1}</TableCell>
+                  <TableCell align="left" sx={{ textTransform: "capitalize" }}>
+                    {user?.full_name}
+                  </TableCell>
+                  <TableCell align="left">{user?.username}</TableCell>
+                  <TableCell align="left">{user?.email}</TableCell>
+                  <TableCell align="left">{user?.phone}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="delete"
+                      size="medium"
+                      color="error"
+                      onClick={() => handleClickOpen(user?.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={alert.open}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
+          <Alert
+            onClose={handleAlertClose}
+            severity={alert.type}
+            sx={{ width: "100%" }}
+          >
+            {alert.text}
+          </Alert>
+        </Snackbar>
       </Paper>
-      <DeleteModal open={open} handleClose={handleClose} text="Are you sure you want to delete this User?" />
+      <DeleteModal
+        open={open}
+        handleClose={handleClose}
+        handleAccept={handleUserDelete}
+        text="Are you sure you want to delete this User?"
+      />
     </AdminLayout>
   );
 };

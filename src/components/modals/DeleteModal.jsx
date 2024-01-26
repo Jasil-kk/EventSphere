@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 
-export const DeleteModal = ({ open, handleClose,text, }) => {
+export const DeleteModal = ({ open, handleClose, text, handleAccept }) => {
   return (
     <Dialog
       open={open}
@@ -21,7 +21,7 @@ export const DeleteModal = ({ open, handleClose,text, }) => {
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button
-          onClick={handleClose}
+          onClick={handleAccept}
           variant="contained"
           autoFocus
           color="error"

@@ -1,19 +1,18 @@
 .mainCategories {
-    width: 100%;
-    height: auto;
-    padding: 2rem 5%;
-    margin-top: 2rem;
-    background-color: #efeded;
+  width: 100%;
+  height: auto;
+  padding: 2rem 5%;
+  margin-top: 2rem;
+  background-color: #efeded;
 }
 .heding {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--secondary-black);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--secondary-black);
 }
 .cateogries_container {
-    margin-top: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
