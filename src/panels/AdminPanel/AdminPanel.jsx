@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AdminLayout } from "../../layouts/AdminLayout";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,8 +10,20 @@ import PeopleIcon from "@mui/icons-material/People";
 import IconButton from "@mui/material/IconButton";
 import GroupsIcon from "@mui/icons-material/Groups";
 import nature from "../../assets/nature.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { allTeamsApi, allUsersApi } from "../../store/adminSlice";
 
 export const AdminPanel = () => {
+  const dispatch = useDispatch();
+
+  const allTeams = useSelector((state) => state.admin.allTeams);
+  const usersCount = useSelector((state) => state.admin.usersCount);
+  const teamCount = allTeams?.length;
+
+  useEffect(() => {
+    dispatch(allUsersApi());
+    dispatch(allTeamsApi());
+  }, []);
   return (
     <AdminLayout>
       <Stack direction="row" spacing={2} alignItems="flex-start" padding="2rem">
@@ -34,15 +46,11 @@ export const AdminPanel = () => {
               alignItems="center"
             >
               <Stack>
-                <Typography
-                  gutterBottom
-                  variant="body1"
-                  component="div"
-                >
+                <Typography gutterBottom variant="body1" component="div">
                   Number of Users
                 </Typography>
                 <Typography variant="h5" color="text.secondary">
-                  4
+                  {usersCount}
                 </Typography>
               </Stack>
               <IconButton
@@ -65,15 +73,11 @@ export const AdminPanel = () => {
               alignItems="center"
             >
               <Stack>
-                <Typography
-                  gutterBottom
-                  variant="body1"
-                  component="div"
-                >
+                <Typography gutterBottom variant="body1" component="div">
                   Number of Teams
                 </Typography>
                 <Typography variant="h5" color="text.secondary">
-                  8
+                  {teamCount}
                 </Typography>
               </Stack>
               <IconButton

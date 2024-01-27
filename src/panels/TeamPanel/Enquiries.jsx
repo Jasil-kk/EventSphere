@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,16 +11,73 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { DeleteModal } from "../../components/modals/DeleteModal";
 import { TeamLayout } from "../../layouts/TeamLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteEnquiryApi, getEnquiriesApi } from "../../store/teamSlice";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export const Enquiries = () => {
+  const [alert, setAlert] = useState({ open: false, type: "info", text: "" });
   const [open, setOpen] = useState(false);
+  const [enquiryId, setEnquiryId] = useState("");
+  const dispatch = useDispatch();
 
-  const handleClickOpen = () => {
+  const allEnquiries = useSelector((state) => state.team.enquiries);
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ open: false, type: "", text: "" });
+  };
+  const handleClickOpen = (enquiryId) => {
     setOpen(true);
+    setEnquiryId(enquiryId);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  useEffect(() => {
+    dispatch(getEnquiriesApi());
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  };
+
+  // Delete Enquiry Function
+  const handleDeleteEnquiry = async () => {
+    try {
+      const response = await dispatch(deleteEnquiryApi(enquiryId));
+      if (response.payload && response.payload.status === 204) {
+        setAlert({
+          open: true,
+          type: "success",
+          text: "Enquiry Deleted successfully!",
+        });
+        dispatch(getEnquiriesApi());
+        handleClose();
+      } else {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "Deleting Enquiry failed!",
+        });
+      }
+    } catch (error) {
+      setAlert({
+        open: true,
+        type: "error",
+        text: "Deleting Enquiry failed. Please try again.",
+      });
+    }
   };
 
   return (
@@ -63,7 +120,7 @@ export const Enquiries = () => {
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
-                  Name
+                  Enquiry
                 </TableCell>
                 <TableCell
                   align="left"
@@ -95,28 +152,48 @@ export const Enquiries = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="left">1</TableCell>
-                <TableCell align="left">Muhammed Jasil</TableCell>
-                <TableCell align="left">8978677878</TableCell>
-                <TableCell align="left">12/01/2023</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="delete"
-                    size="medium"
-                    color="error"
-                    onClick={handleClickOpen}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              {allEnquiries?.map((enquiry, index) => (
+                <TableRow key={enquiry?.id}>
+                  <TableCell align="left">{index + 1}</TableCell>
+                  <TableCell align="left">{enquiry?.name} </TableCell>
+                  <TableCell align="left">{enquiry?.phone}</TableCell>
+                  <TableCell align="left">
+                    {" "}
+                    {formatDate(enquiry?.created_at)}
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="delete"
+                      size="medium"
+                      color="error"
+                      onClick={() => handleClickOpen(enquiry?.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={alert.open}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
+          <Alert
+            onClose={handleAlertClose}
+            severity={alert.type}
+            sx={{ width: "100%" }}
+          >
+            {alert.text}
+          </Alert>
+        </Snackbar>
       </Paper>
       <DeleteModal
         open={open}
+        handleAccept={handleDeleteEnquiry}
         handleClose={handleClose}
         text="Are you sure you want to delete this Enquiry?"
       />

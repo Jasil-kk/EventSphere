@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,12 +11,22 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { useDispatch, useSelector } from "react-redux";
+import { categoryGetApi } from "../../store/adminSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const AddServiceModal = ({ open, handleClose }) => {
+export const AddServiceModal = ({ data,setData,open, handleClose, handleCreateService }) => {
+  const dispatch = useDispatch();
+
+  const categories = useSelector((state) => state.admin.categories);
+
+  useEffect(() => {
+    dispatch(categoryGetApi());
+  }, []);
+
   return (
     <Dialog
       open={open}
@@ -42,24 +52,34 @@ export const AddServiceModal = ({ open, handleClose }) => {
             label="Enter Service Name"
             variant="outlined"
             color="secondary"
+            value={data.service_name}
+            onChange={(e) => setData({ ...data, service_name: e.target.value })}
           />
           <FormControl fullWidth color="secondary">
-            <InputLabel id="demo-simple-select-label">Event Organisers</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              Select Category
+            </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Event Organisers"
+              value={data.sub_catagory}
+              onChange={(e) =>
+                setData({ ...data, sub_catagory: e.target.value })
+              }
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {categories?.map((category) => (
+                <MenuItem key={category?.id} value={category?.id}>
+                  {category?.sub_catagory_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose} variant="contained" color="secondary">
+        <Button onClick={handleCreateService} variant="contained" color="secondary">
           Add
         </Button>
       </DialogActions>

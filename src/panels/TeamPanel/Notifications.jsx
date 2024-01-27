@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,16 +11,73 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { DeleteModal } from "../../components/modals/DeleteModal";
 import { TeamLayout } from "../../layouts/TeamLayout";
+import { useDispatch, useSelector } from "react-redux";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { deleteNotificationApi, getNotificationsApi } from "../../store/teamSlice";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export const Notifications = () => {
+  const [alert, setAlert] = useState({ open: false, type: "info", text: "" });
   const [open, setOpen] = useState(false);
+  const [notificationId, setNotificationId] = useState("");
+  const dispatch = useDispatch();
 
-  const handleClickOpen = () => {
+  const allNotifications = useSelector((state) => state.team.notifications);
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ open: false, type: "", text: "" });
+  };
+
+  const handleClickOpen = (notificationId) => {
     setOpen(true);
+    setNotificationId(notificationId);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  useEffect(() => {
+    dispatch(getNotificationsApi());
+  }, []);
+
+  const handleDeleteNotification = async () => {
+    try {
+      const response = await dispatch(deleteNotificationApi(notificationId));
+      if (response.payload && response.payload.status === 204) {
+        setAlert({
+          open: true,
+          type: "success",
+          text: "Notification Deleted successfully!",
+        });
+        dispatch(getNotificationsApi());
+        handleClose();
+      } else {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "Deleting Notification failed!",
+        });
+      }
+    } catch (error) {
+      setAlert({
+        open: true,
+        type: "error",
+        text: "Deleting Notification failed. Please try again.",
+      });
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
   };
 
   return (
@@ -68,7 +125,7 @@ export const Notifications = () => {
                 <TableCell
                   align="left"
                   style={{
-                    minWidth: 250,
+                    minWidth: 350,
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
@@ -77,7 +134,7 @@ export const Notifications = () => {
                 <TableCell
                   align="left"
                   style={{
-                    minWidth: 250,
+                    minWidth: 200,
                     backgroundColor: "rgb(223, 222, 222)",
                   }}
                 >
@@ -95,33 +152,49 @@ export const Notifications = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="left">1</TableCell>
-                <TableCell align="left">Something else</TableCell>
-                <TableCell align="left">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Perferendis, vitae, quidem libero neque eum asperiores
-                  veritatis sunt numquam facere sapiente officia cumque animi
-                  consequuntur provident! Hic magnam mollitia id consequuntur.
-                </TableCell>
-                <TableCell align="left">12/01/2023</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="delete"
-                    size="medium"
-                    color="error"
-                    onClick={handleClickOpen}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              {allNotifications?.map((notification, index) => (
+                <TableRow key={notification?.id}>
+                  <TableCell align="left">{index + 1}</TableCell>
+                  <TableCell align="left">{notification?.subject}</TableCell>
+                  <TableCell align="left">
+                    {notification?.notification}
+                  </TableCell>
+                  <TableCell align="left">
+                    {formatDate(notification?.date)}
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="delete"
+                      size="medium"
+                      color="error"
+                      onClick={() => handleClickOpen(notification?.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={alert.open}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
+          <Alert
+            onClose={handleAlertClose}
+            severity={alert.type}
+            sx={{ width: "100%" }}
+          >
+            {alert.text}
+          </Alert>
+        </Snackbar>
       </Paper>
       <DeleteModal
         open={open}
+        handleAccept={handleDeleteNotification}
         handleClose={handleClose}
         text="Are you sure you want to delete this Message?"
       />

@@ -49,7 +49,7 @@ export const AdminSidebar = () => {
           <ListItemIcon>
             <LibraryAddIcon />
           </ListItemIcon>
-          <ListItemText primary="Add Category" />
+          <ListItemText primary="Categories" />
         </ListItemButton>
         <ListItemButton selected={isActive("/publishnotification")} onClick={() => navigate("/publishnotification")}>
           <ListItemIcon>

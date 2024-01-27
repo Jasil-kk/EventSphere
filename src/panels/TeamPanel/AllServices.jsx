@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,10 +15,35 @@ import Stack from "@mui/material/Stack";
 import { DeleteModal } from "../../components/modals/DeleteModal";
 import { TeamLayout } from "../../layouts/TeamLayout";
 import { AddServiceModal } from "../../components/modals/AddServiceModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addServicesApi,
+  allServicesApi,
+  deleteServicesApi,
+} from "../../store/teamSlice";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export const AllServices = () => {
+  const [alert, setAlert] = useState({ open: false, type: "info", text: "" });
   const [open, setOpen] = useState(false);
   const [addService, setAddService] = useState(false);
+  const [serviceId, setServiceId] = useState("");
+  const [data, setData] = useState({ service_name: "", sub_catagory: "" });
+  const dispatch = useDispatch();
+
+  const allServices = useSelector((state) => state.team.allServices);
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ open: false, type: "", text: "" });
+  };
 
   const handleAddService = () => {
     setAddService(true);
@@ -26,14 +51,77 @@ export const AllServices = () => {
 
   const handleAddServiceClose = () => {
     setAddService(false);
+    setData({ service_name: "", sub_catagory: "" });
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (serviceId) => {
     setOpen(true);
+    setServiceId(serviceId);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  // Add Service Function
+  const handleCreateService = async () => {
+    try {
+      const response = await dispatch(addServicesApi(data));
+      if (response.payload) {
+        setAlert({
+          open: true,
+          type: "success",
+          text: "Service Added successfully!",
+        });
+        dispatch(allServicesApi());
+        handleAddServiceClose();
+      } else {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "You can only create one service in one catagory!",
+        });
+      }
+    } catch (error) {
+      setAlert({
+        open: true,
+        type: "error",
+        text: "Adding Service failed. Please try again.",
+      });
+    }
+  };
+
+  // All User Get
+  useEffect(() => {
+    dispatch(allServicesApi());
+  }, []);
+
+  // Delete Service Function
+  const handleDeleteService = async () => {
+    try {
+      const response = await dispatch(deleteServicesApi(serviceId));
+      if (response.payload) {
+        setAlert({
+          open: true,
+          type: "success",
+          text: "Service Deleted successfully!",
+        });
+        dispatch(allServicesApi());
+        handleClose();
+      } else {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "Deleting Service failed!",
+        });
+      }
+    } catch (error) {
+      setAlert({
+        open: true,
+        type: "error",
+        text: "Deleting Service failed. Please try again.",
+      });
+    }
   };
 
   return (
@@ -100,15 +188,6 @@ export const AllServices = () => {
                   Category
                 </TableCell>
                 <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 100,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Date
-                </TableCell>
-                <TableCell
                   align="right"
                   style={{
                     minWidth: 200,
@@ -120,37 +199,61 @@ export const AllServices = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="left">1</TableCell>
-                <TableCell align="left">Muhammed Jasil</TableCell>
-                <TableCell align="left">jasil</TableCell>
-                <TableCell align="left">12/01/2023</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="delete"
-                    size="medium"
-                    color="info"
-                    onClick={handleAddService}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    size="medium"
-                    color="error"
-                    onClick={handleClickOpen}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              {allServices?.map((service, index) => (
+                <TableRow key={service?.id}>
+                  <TableCell align="left">{index + 1}</TableCell>
+                  <TableCell align="left">{service?.service_name}</TableCell>
+                  <TableCell align="left">
+                    {service?.sub_catagory_name}
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="delete"
+                      size="medium"
+                      color="info"
+                      onClick={handleAddService}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      size="medium"
+                      color="error"
+                      onClick={() => handleClickOpen(service?.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={alert.open}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
+          <Alert
+            onClose={handleAlertClose}
+            severity={alert.type}
+            sx={{ width: "100%" }}
+          >
+            {alert.text}
+          </Alert>
+        </Snackbar>
       </Paper>
-      <AddServiceModal open={addService} handleClose={handleAddServiceClose} />
+      <AddServiceModal
+        data={data}
+        setData={setData}
+        open={addService}
+        handleCreateService={handleCreateService}
+        handleClose={handleAddServiceClose}
+      />
       <DeleteModal
         open={open}
+        handleAccept={handleDeleteService}
         handleClose={handleClose}
         text="Are you sure you want to delete this Service?"
       />
