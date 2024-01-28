@@ -133,6 +133,7 @@ export const AllServices = () => {
           height: "100%",
           overflow: "hidden",
         }}
+        elevation={0}
       >
         <Stack
           direction={"row"}
@@ -150,85 +151,98 @@ export const AllServices = () => {
             Add Service
           </Button>
         </Stack>
-        <TableContainer
-          sx={{
-            marginTop: "0.5rem",
-            maxHeight: "calc(100vh - 10rem)",
-            border: "1px solid purple",
-          }}
-        >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 30,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  No.
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Service Name
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Category
-                </TableCell>
-                <TableCell
-                  align="right"
-                  style={{
-                    minWidth: 200,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allServices?.map((service, index) => (
-                <TableRow key={service?.id}>
-                  <TableCell align="left">{index + 1}</TableCell>
-                  <TableCell align="left">{service?.service_name}</TableCell>
-                  <TableCell align="left">
-                    {service?.sub_catagory_name}
+        {allServices && allServices.length > 0 ? (
+          <TableContainer
+            sx={{
+              marginTop: "0.5rem",
+              maxHeight: "calc(100vh - 10rem)",
+              border: "1px solid purple",
+            }}
+          >
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 30,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    No.
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      aria-label="delete"
-                      size="medium"
-                      color="info"
-                      onClick={handleAddService}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      size="medium"
-                      color="error"
-                      onClick={() => handleClickOpen(service?.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Service Name
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{
+                      minWidth: 200,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {allServices?.map((service, index) => (
+                  <TableRow key={service?.id}>
+                    <TableCell align="left">{index + 1}</TableCell>
+                    <TableCell align="left">{service?.service_name}</TableCell>
+                    <TableCell align="left">
+                      {service?.sub_catagory_name}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="delete"
+                        size="medium"
+                        color="info"
+                        onClick={handleAddService}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        size="medium"
+                        color="error"
+                        onClick={() => handleClickOpen(service?.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Stack
+            width={"100%"}
+            height={"calc(100vh - 12rem)"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="body1" component="div" color={"GrayText"}>
+              services is empty
+            </Typography>
+          </Stack>
+        )}
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={alert.open}

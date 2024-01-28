@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -15,6 +15,13 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  allServicesApi,
+  getEnquiriesApi,
+  getInboxsApi,
+  getNotificationsApi,
+} from "../../store/teamSlice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,6 +36,25 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export const TeamPanel = () => {
+  const dispatch = useDispatch();
+
+  const allservices = useSelector((state) => state.team.allServices);
+  const allEnquiries = useSelector((state) => state.team.enquiries);
+  const allNotifications = useSelector((state) => state.team.notifications);
+  const allInboxes = useSelector((state) => state.team.inboxes);
+
+  const servicesCount = allservices.length;
+  const enquiriesCount = allEnquiries.length;
+  const notificationsCount = allNotifications.length;
+  const inboxesCount = allInboxes.length;
+
+  useEffect(() => {
+    dispatch(allServicesApi());
+    dispatch(getEnquiriesApi());
+    dispatch(getNotificationsApi());
+    dispatch(getInboxsApi());
+  }, []);
+
   return (
     <TeamLayout>
       <Stack direction="row" spacing={2} alignItems="flex-start" padding="2rem">
@@ -94,7 +120,7 @@ export const TeamPanel = () => {
                     Number of Services
                   </Typography>
                   <Typography variant="h5" color="text.secondary">
-                    2
+                    {servicesCount}
                   </Typography>
                 </Stack>
                 <IconButton
@@ -121,7 +147,7 @@ export const TeamPanel = () => {
                     Notifications
                   </Typography>
                   <Typography variant="h5" color="text.secondary">
-                    3
+                    {notificationsCount}
                   </Typography>
                 </Stack>
                 <IconButton
@@ -153,7 +179,7 @@ export const TeamPanel = () => {
                     Number of Enquiry
                   </Typography>
                   <Typography variant="h5" color="text.secondary">
-                    2
+                    {enquiriesCount}
                   </Typography>
                 </Stack>
                 <IconButton
@@ -180,7 +206,7 @@ export const TeamPanel = () => {
                     Inbox
                   </Typography>
                   <Typography variant="h5" color="text.secondary">
-                    3
+                    {inboxesCount}
                   </Typography>
                 </Stack>
                 <IconButton

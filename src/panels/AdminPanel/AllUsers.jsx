@@ -88,6 +88,7 @@ export const AllUsers = () => {
           height: "100%",
           overflow: "hidden",
         }}
+        elevation={0}
       >
         <Stack
           direction={"row"}
@@ -104,93 +105,112 @@ export const AllUsers = () => {
             color="secondary"
           />
         </Stack>
-        <TableContainer
-          sx={{ maxHeight: "calc(100vh - 10rem)", border: "1px solid purple" }}
-        >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 30,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  No.
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Full Name
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Username
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Email
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 200,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Phone
-                </TableCell>
-                <TableCell
-                  align="right"
-                  style={{
-                    minWidth: 100,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allUsers?.map((user, index) => (
-                <TableRow key={user?.id}>
-                  <TableCell align="left">{index + 1}</TableCell>
-                  <TableCell align="left" sx={{ textTransform: "capitalize" }}>
-                    {user?.full_name}
+        {allUsers && allUsers.length > 0 ? (
+          <TableContainer
+            sx={{
+              maxHeight: "calc(100vh - 10rem)",
+              border: "1px solid purple",
+            }}
+          >
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 30,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    No.
                   </TableCell>
-                  <TableCell align="left">{user?.username}</TableCell>
-                  <TableCell align="left">{user?.email}</TableCell>
-                  <TableCell align="left">{user?.phone}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      aria-label="delete"
-                      size="medium"
-                      color="error"
-                      onClick={() => handleClickOpen(user?.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Full Name
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Username
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Email
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 200,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Phone
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{
+                      minWidth: 100,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {allUsers?.map((user, index) => (
+                  <TableRow key={user?.id}>
+                    <TableCell align="left">{index + 1}</TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{ textTransform: "capitalize" }}
+                    >
+                      {user?.full_name}
+                    </TableCell>
+                    <TableCell align="left">{user?.username}</TableCell>
+                    <TableCell align="left">{user?.email}</TableCell>
+                    <TableCell align="left">{user?.phone}</TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="delete"
+                        size="medium"
+                        color="error"
+                        onClick={() => handleClickOpen(user?.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Stack
+            width={"100%"}
+            height={"calc(100vh - 12rem)"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="body1" component="div" color={"GrayText"}>
+              users is empty
+            </Typography>
+          </Stack>
+        )}
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={alert.open}

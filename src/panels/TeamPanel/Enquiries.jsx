@@ -5,6 +5,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import Stack from "@mui/material/Stack";
 import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
@@ -47,11 +48,6 @@ export const Enquiries = () => {
     dispatch(getEnquiriesApi());
   }, []);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
-
   // Delete Enquiry Function
   const handleDeleteEnquiry = async () => {
     try {
@@ -80,6 +76,21 @@ export const Enquiries = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    };
+    const locale = "en-GB";
+    return date.toLocaleString(locale, options);
+  };
+
   return (
     <TeamLayout>
       <Paper
@@ -89,93 +100,106 @@ export const Enquiries = () => {
           height: "100%",
           overflow: "hidden",
         }}
+        elevation={0}
       >
         <Typography variant="h6" component="h6" mb="0.5rem">
           Enquiries
         </Typography>
-
-        <TableContainer
-          sx={{
-            marginTop: "0.5rem",
-            maxHeight: "calc(100vh - 10rem)",
-            border: "1px solid purple",
-          }}
-        >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 30,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  No.
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Enquiry
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 250,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Phone
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    minWidth: 100,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Date
-                </TableCell>
-                <TableCell
-                  align="right"
-                  style={{
-                    minWidth: 200,
-                    backgroundColor: "rgb(223, 222, 222)",
-                  }}
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allEnquiries?.map((enquiry, index) => (
-                <TableRow key={enquiry?.id}>
-                  <TableCell align="left">{index + 1}</TableCell>
-                  <TableCell align="left">{enquiry?.name} </TableCell>
-                  <TableCell align="left">{enquiry?.phone}</TableCell>
-                  <TableCell align="left">
-                    {" "}
-                    {formatDate(enquiry?.created_at)}
+        {allEnquiries && allEnquiries.length > 0 ? (
+          <TableContainer
+            sx={{
+              marginTop: "0.5rem",
+              maxHeight: "calc(100vh - 10rem)",
+              border: "1px solid purple",
+            }}
+          >
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 30,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    No.
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      aria-label="delete"
-                      size="medium"
-                      color="error"
-                      onClick={() => handleClickOpen(enquiry?.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Enquiry
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 250,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Phone
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      minWidth: 100,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Date
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{
+                      minWidth: 200,
+                      backgroundColor: "rgb(223, 222, 222)",
+                    }}
+                  >
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {allEnquiries?.map((enquiry, index) => (
+                  <TableRow key={enquiry?.id}>
+                    <TableCell align="left">{index + 1}</TableCell>
+                    <TableCell align="left">{enquiry?.name} </TableCell>
+                    <TableCell align="left">{enquiry?.phone}</TableCell>
+                    <TableCell align="left">
+                      {" "}
+                      {formatDate(enquiry?.created_at)}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="delete"
+                        size="medium"
+                        color="error"
+                        onClick={() => handleClickOpen(enquiry?.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Stack
+            width={"100%"}
+            height={"calc(100vh - 12rem)"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="body1" component="div" color={"GrayText"}>
+              enquiries is empty
+            </Typography>
+          </Stack>
+        )}
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={alert.open}

@@ -12,7 +12,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const EnquiryModal = ({ open, handleClose }) => {
+export const EnquiryModal = ({
+  open,
+  input,
+  setInput,
+  handlePostEnquiry,
+  handleClose,
+}) => {
   return (
     <Dialog
       open={open}
@@ -38,18 +44,31 @@ export const EnquiryModal = ({ open, handleClose }) => {
             label="Name"
             variant="outlined"
             color="secondary"
+            value={input.name}
+            onChange={(e) => setInput({ ...input, name: e.target.value })}
           />
           <TextField
             id="outlined-basic"
             label="Phone Number"
             variant="outlined"
             color="secondary"
+            value={input.phone}
+            onChange={(e) => {
+              const phoneNo = e.target.value;
+              if (/^\d{0,10}$/.test(phoneNo)) {
+                setInput({ ...input, phone: phoneNo });
+              }
+            }}
           />
         </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose} variant="contained" color="secondary">
+        <Button
+          onClick={handlePostEnquiry}
+          variant="contained"
+          color="secondary"
+        >
           Send
         </Button>
       </DialogActions>

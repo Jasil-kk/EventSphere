@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import classes from "./Popular.module.css";
 import Chip from "@mui/material/Chip";
 import Card from "@mui/material/Card";
@@ -9,16 +9,39 @@ import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import Rating from "@mui/material/Rating";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getPopularApi } from "../../store/userSlice";
 
 export const Popular = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const populars = useSelector((state) => state.user.populars);
+
+  useEffect(() => {
+    dispatch(getPopularApi());
+  }, []);
+
+  const scrolltotop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className={classes.popular_main}>
       <h2 className={classes.heding}>Popular</h2>
       <div className={classes.card_container}>
-        {[...Array(14)].map((_, index) => (
-          <Card key={index} sx={{ maxWidth: 240, minWidth: 240 }} onClick={()=>navigate("/singleview")}>
+        {populars?.map((popular) => (
+          <Card
+            key={popular?.id}
+            sx={{ maxWidth: 240, minWidth: 240 }}
+            onClick={() => {
+              navigate(
+                `/singleview/${popular?.sub_catagory}/${popular?.id}/${popular?.account}`
+              );
+              scrolltotop();
+            }}
+          >
             <CardActionArea>
               <Chip
                 label="Popular"
@@ -30,22 +53,25 @@ export const Popular = () => {
                 }}
                 size="small"
               />
-              <CardHeader title="Shrimp and Chorizo Paella" />
+              <CardHeader
+                sx={{ textTransform: "capitalize" }}
+                title={popular?.account_view?.team_name}
+              />
               <CardMedia
                 component="img"
                 height="130"
-                image="https://images.pexels.com/photos/1036269/pexels-photo-1036269.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Paella dish"
+                image={popular?.team_profilepic}
+                alt={popular?.account_view?.team_name}
               />
               <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                  This impressive paella is a perfect party dish ...
+                  {popular?.account_view?.over_view}
                 </Typography>
               </CardContent>
               <CardActions disableSpacing>
                 <Rating
                   name="half-rating-read"
-                  defaultValue={2.5}
+                  defaultValue={popular?.avg_ratings}
                   precision={0.5}
                   readOnly
                 />

@@ -43,8 +43,8 @@ function App() {
       ) : (
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/companylist" element={<CompanyList />} />
-          <Route path="/singleview" element={<SingleView />} />
+          <Route path="/companylist/:categoyId" element={<CompanyList />} />
+          <Route path="/singleview/:categoryId/:teamId/:accountId" element={<SingleView />} />
         </Routes>
       )}
     </div>

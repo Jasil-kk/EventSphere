@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,7 +12,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const ConnectUsModal = ({ open, handleClose }) => {
+export const ConnectUsModal = ({
+  open,
+  input,
+  setInput,
+  handlePostConnctUs,
+  handleClose,
+}) => {
   return (
     <Dialog
       open={open}
@@ -38,25 +44,34 @@ export const ConnectUsModal = ({ open, handleClose }) => {
             label="Email"
             variant="outlined"
             color="secondary"
+            value={input.email}
+            onChange={(e) => setInput({ ...input, email: e.target.value })}
           />
           <TextField
             id="outlined-basic"
             label="Subject"
             variant="outlined"
             color="secondary"
+            value={input.subject}
+            onChange={(e) => setInput({ ...input, subject: e.target.value })}
           />
           <TextField
             id="outlined-multiline-static"
-            label="Multiline"
+            label="Message"
             multiline
             rows={4}
-            defaultValue="A nice day is a nice day. Lao Tseu"
+            value={input.message}
+            onChange={(e) => setInput({ ...input, message: e.target.value })}
           />
         </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose} variant="contained" color="secondary">
+        <Button
+          onClick={handlePostConnctUs}
+          variant="contained"
+          color="secondary"
+        >
           Send
         </Button>
       </DialogActions>

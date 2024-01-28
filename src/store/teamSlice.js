@@ -67,12 +67,28 @@ export const deleteNotificationApi = createAsyncThunk(
   }
 );
 
+// Get Notifications Api
+export const getInboxsApi = createAsyncThunk("auth/getInboxsApi", async () => {
+  const response = await axiosApi.get("/store/inbox/");
+  return response.data;
+});
+
+// Delete Notifications Api
+export const deleteInboxApi = createAsyncThunk(
+  "auth/deleteInboxApi",
+  async (inboxId) => {
+    const response = await axiosApi.delete(`/store/inbox/${inboxId}/`);
+    return response;
+  }
+);
+
 const teamSlice = createSlice({
   name: "team",
   initialState: {
     allServices: [],
     enquiries: [],
     notifications: [],
+    inboxes: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -110,6 +126,18 @@ const teamSlice = createSlice({
         state.notifications = action.payload;
       })
       .addCase(getNotificationsApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getInboxsApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getInboxsApi.fulfilled, (state, action) => {
+        state.loading = false;
+        state.inboxes = action.payload;
+      })
+      .addCase(getInboxsApi.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

@@ -6,9 +6,6 @@ export const registerApi = createAsyncThunk(
   "auth/registerApi",
   async (input) => {
     const response = await axiosApi.post("/projectaccount/register/", input);
-    sessionStorage.setItem("token", response.data.token);
-    sessionStorage.setItem("username", response.data.username);
-    sessionStorage.setItem("id", response.data.pk);
     return response.data;
   }
 );
@@ -32,21 +29,21 @@ export const teamRegisterApi = createAsyncThunk(
       "/projectaccount/event_team_register/",
       input
     );
-    sessionStorage.setItem("token", response.data.token);
-    sessionStorage.setItem("username", response.data.username);
-    sessionStorage.setItem("id", response.data.pk);
     return response.data;
   }
 );
 
 // Logout Api
-export const logoutApi = createAsyncThunk("auth/logoutApi", async (navigate) => {
-  const response = await axiosApi.post("/auth/token/logout/");
-  sessionStorage.clear();
-  navigate("/");
-  window.location.reload();
-  return response.data;
-});
+export const logoutApi = createAsyncThunk(
+  "auth/logoutApi",
+  async (navigate) => {
+    const response = await axiosApi.post("/auth/token/logout/");
+    sessionStorage.clear();
+    navigate("/");
+    window.location.reload();
+    return response.data;
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",

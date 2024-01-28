@@ -172,42 +172,58 @@ export const PublishNotification = () => {
             Add Notification
           </Button>
         </Stack>
-        <Stack
-          mt={1}
-          direction={"column"}
-          width={"100%"}
-          alignItems={"flex-start"}
-          justifyContent={"flex-start"}
-          overflow={"auto"}
-        >
-          {allNotifications?.map((notification) => (
-            <Accordion
-              key={notification?.id}
-              sx={{ background: "#f6f3f3", width: "100%" }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel3-content"
-                id="panel3-header"
+        {allNotifications && allNotifications.length > 0 ? (
+          <Stack
+            mt={1}
+            direction={"column"}
+            width={"100%"}
+            alignItems={"flex-start"}
+            justifyContent={"flex-start"}
+            overflow={"auto"}
+          >
+            {allNotifications?.map((notification) => (
+              <Accordion
+                key={notification?.id}
+                sx={{ background: "#eae5e5", width: "100%" }}
               >
-                {notification?.subject}
-              </AccordionSummary>
-              <AccordionDetails>{notification?.notification}</AccordionDetails>
-              <AccordionActions>
-                <IconButton
-                  aria-label="delete"
-                  size="medium"
-                  color="error"
-                  onClick={() => {
-                    handleClickOpen(notification?.id);
-                  }}
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel3-content"
+                  id="panel3-header"
                 >
-                  <DeleteIcon fontSize="inherit" />
-                </IconButton>
-              </AccordionActions>
-            </Accordion>
-          ))}
-        </Stack>
+                  {notification?.subject}
+                </AccordionSummary>
+                <AccordionDetails>
+                  {notification?.notification}
+                </AccordionDetails>
+                <AccordionActions>
+                  <IconButton
+                    aria-label="delete"
+                    size="medium"
+                    color="error"
+                    onClick={() => {
+                      handleClickOpen(notification?.id);
+                    }}
+                  >
+                    <DeleteIcon fontSize="inherit" />
+                  </IconButton>
+                </AccordionActions>
+              </Accordion>
+            ))}
+          </Stack>
+        ) : (
+          <Stack
+            width={"100%"}
+            height={"calc(100vh - 12rem)"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="body1" component="div" color={"GrayText"}>
+              No notifications added. Click 'ADD NOTIFICATION' Button to add
+              notifications.
+            </Typography>
+          </Stack>
+        )}
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={alert.open}

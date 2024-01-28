@@ -181,52 +181,66 @@ export const AddCategory = () => {
             Add Category
           </Button>
         </Stack>
-        <Stack
-          mt={1}
-          direction={"row"}
-          width={"100%"}
-          alignItems={"flex-start"}
-          justifyContent={"flex-start"}
-          maxHeight={"calc(100vh - 10rem)"}
-          flexWrap={"wrap"}
-          gap={"0.5rem"}
-          overflow={"auto"}
-        >
-          {allCategories?.map((category) => (
-            <Card
-              key={category?.id}
-              sx={{
-                width: "14rem",
-                height: "13rem",
-                position: "relative",
-                border: "2px solid #efeaea",
-              }}
-            >
-              <IconButton
-                aria-label="delete"
-                size="medium"
-                color="error"
-                sx={{ position: "absolute", top: "0", right: "0" }}
-                onClick={() => {
-                  handleClickOpen(category?.id);
+        {allCategories && allCategories.length > 0 ? (
+          <Stack
+            mt={1}
+            direction={"row"}
+            width={"100%"}
+            alignItems={"flex-start"}
+            justifyContent={"flex-start"}
+            maxHeight={"calc(100vh - 10rem)"}
+            flexWrap={"wrap"}
+            gap={"0.5rem"}
+            overflow={"auto"}
+          >
+            {allCategories?.map((category) => (
+              <Card
+                key={category?.id}
+                sx={{
+                  width: "14rem",
+                  height: "13rem",
+                  position: "relative",
+                  border: "2px solid #efeaea",
                 }}
               >
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
-              <CardMedia
-                component="img"
-                height="130"
-                image={category?.image}
-                alt="Category"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="div">
-                  {category?.sub_catagory_name}
-                </Typography>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
+                <IconButton
+                  aria-label="delete"
+                  size="medium"
+                  color="error"
+                  sx={{ position: "absolute", top: "0", right: "0" }}
+                  onClick={() => {
+                    handleClickOpen(category?.id);
+                  }}
+                >
+                  <DeleteIcon fontSize="inherit" />
+                </IconButton>
+                <CardMedia
+                  component="img"
+                  height="130"
+                  image={category?.image}
+                  alt="Category"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="div">
+                    {category?.sub_catagory_name}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
+        ) : (
+          <Stack
+            width={"100%"}
+            height={"calc(100vh - 12rem)"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="body1" component="div" color={"GrayText"}>
+              No categories added. Click 'ADD CATEGORY' Button to add
+              categories.
+            </Typography>
+          </Stack>
+        )}
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={alert.open}
