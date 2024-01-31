@@ -233,7 +233,11 @@ export const TeamRegistration = ({
         variant="contained"
         color="secondary"
         size="medium"
-        sx={{ width: "70%", marginTop: "1.5rem", textTransform: "capitalize" }}
+        sx={{
+          width: "70%",
+          marginTop: "1.5rem",
+          textTransform: "capitalize",
+        }}
         onClick={handleSubmit}
       >
         Create account

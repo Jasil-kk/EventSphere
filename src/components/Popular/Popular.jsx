@@ -34,7 +34,7 @@ export const Popular = () => {
         {populars?.map((popular) => (
           <Card
             key={popular?.id}
-            sx={{ maxWidth: 240, minWidth: 240 }}
+            sx={{ maxWidth: 240, minWidth: 240, height: 370 }}
             onClick={() => {
               navigate(
                 `/singleview/${popular?.sub_catagory}/${popular?.id}/${popular?.account}`
@@ -65,7 +65,9 @@ export const Popular = () => {
               />
               <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                  {popular?.account_view?.over_view}
+                  {popular?.account_view?.over_view.length > 80
+                    ? `${popular?.account_view?.over_view.substring(0, 80)}...`
+                    : popular?.account_view?.over_view}
                 </Typography>
               </CardContent>
               <CardActions disableSpacing>

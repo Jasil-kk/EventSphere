@@ -28,7 +28,7 @@ export const AllUsers = () => {
   const dispatch = useDispatch();
 
   const allUsers = useSelector((state) => state.admin.allUsers);
-  const totalUsers = useSelector((state) => state.admin.usersCount);
+  const totalUsers = allUsers.length;
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {

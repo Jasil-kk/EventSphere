@@ -17,8 +17,9 @@ export const AdminPanel = () => {
   const dispatch = useDispatch();
 
   const allTeams = useSelector((state) => state.admin.allTeams);
-  const usersCount = useSelector((state) => state.admin.usersCount);
+  const allUsers = useSelector((state) => state.admin.allUsers);
   const teamCount = allTeams?.length;
+  const usersCount = allUsers?.length;
 
   useEffect(() => {
     dispatch(allUsersApi());

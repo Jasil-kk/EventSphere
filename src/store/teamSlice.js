@@ -82,6 +82,59 @@ export const deleteInboxApi = createAsyncThunk(
   }
 );
 
+// Team Profile Get Api
+export const teamProfileGetApi = createAsyncThunk(
+  "auth/teamProfileGetApi",
+  async () => {
+    const response = await axiosApi.get("/store/team_profile/");
+    return response.data;
+  }
+);
+
+// Team Profile Post Api
+export const teamProfilePostApi = createAsyncThunk(
+  "auth/teamProfilePostApi",
+  async (formData) => {
+    const response = await axiosApi.post("/store/team_profile/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
+);
+
+// Team Pictures Get Api
+export const teamPicturesGetApi = createAsyncThunk(
+  "auth/teamPicturesGetApi",
+  async () => {
+    const response = await axiosApi.get("/store/profile_pic/");
+    return response.data;
+  }
+);
+
+// Team Pictures Post Api
+export const teamPicturesPostApi = createAsyncThunk(
+  "auth/teamPicturesPostApi",
+  async (formData) => {
+    const response = await axiosApi.post("/store/profile_pic/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
+);
+
+// Team Pictures Post Api
+export const teamPictureDeleteApi = createAsyncThunk(
+  "auth/teamPictureDeleteApi",
+  async (pictureId) => {
+    const response = await axiosApi.delete(`/store/profile_pic/${pictureId}/`);
+    return response;
+  }
+);
+
 const teamSlice = createSlice({
   name: "team",
   initialState: {
@@ -89,6 +142,8 @@ const teamSlice = createSlice({
     enquiries: [],
     notifications: [],
     inboxes: [],
+    teamProfile: [],
+    allPictures: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -138,6 +193,30 @@ const teamSlice = createSlice({
         state.inboxes = action.payload;
       })
       .addCase(getInboxsApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(teamProfileGetApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(teamProfileGetApi.fulfilled, (state, action) => {
+        state.loading = false;
+        state.teamProfile = action.payload;
+      })
+      .addCase(teamProfileGetApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(teamPicturesGetApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(teamPicturesGetApi.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allPictures = action.payload;
+      })
+      .addCase(teamPicturesGetApi.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

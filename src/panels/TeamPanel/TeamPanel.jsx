@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -11,6 +11,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import EmailIcon from "@mui/icons-material/Email";
 import nature from "../../assets/nature.jpg";
 import { TeamLayout } from "../../layouts/TeamLayout";
+import CircularProgress from "@mui/material/CircularProgress";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -21,7 +22,15 @@ import {
   getEnquiriesApi,
   getInboxsApi,
   getNotificationsApi,
+  teamProfileGetApi,
+  teamProfilePostApi,
 } from "../../store/teamSlice";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -36,23 +45,79 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export const TeamPanel = () => {
+  const [alert, setAlert] = useState({ open: false, type: "info", text: "" });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const allservices = useSelector((state) => state.team.allServices);
   const allEnquiries = useSelector((state) => state.team.enquiries);
   const allNotifications = useSelector((state) => state.team.notifications);
   const allInboxes = useSelector((state) => state.team.inboxes);
+  const teamProfile = useSelector((state) => state.team.teamProfile);
 
   const servicesCount = allservices.length;
   const enquiriesCount = allEnquiries.length;
   const notificationsCount = allNotifications.length;
   const inboxesCount = allInboxes.length;
 
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ open: false, type: "", text: "" });
+  };
+
   useEffect(() => {
     dispatch(allServicesApi());
     dispatch(getEnquiriesApi());
     dispatch(getNotificationsApi());
     dispatch(getInboxsApi());
+  }, []);
+
+  const handleProfileImageUpload = async (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("team_profile", file);
+
+      try {
+        const response = await dispatch(teamProfilePostApi(formData));
+        setLoading(true);
+        if (response.payload) {
+          setAlert({
+            open: true,
+            type: "success",
+            text: "Image uploaded successfully!",
+          });
+          setLoading(false);
+          dispatch(teamProfileGetApi());
+        } else {
+          setAlert({
+            open: true,
+            type: "error",
+            text: "Image upload failed. Please try again.",
+          });
+          setLoading(false);
+        }
+      } catch (error) {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "Image upload failed. Please try again.",
+        });
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    dispatch(teamProfileGetApi());
   }, []);
 
   return (
@@ -76,21 +141,36 @@ export const TeamPanel = () => {
             </Typography>
             <Avatar
               alt="Team"
-              src="https://images.pexels.com/photos/18898559/pexels-photo-18898559/free-photo-of-haunted-forest.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+              src={
+                teamProfile && teamProfile.length > 0
+                  ? teamProfile?.[0]?.team_profile
+                  : selectedImage
+              }
               sx={{
-                width: 60,
-                height: 60,
+                width: 70,
+                height: 70,
                 position: "absolute",
                 top: "70px",
                 left: "1rem",
                 border: "2px solid #fff",
               }}
             />
+            {loading && (
+              <CircularProgress
+                color="info"
+                size={30}
+                sx={{
+                  position: "absolute",
+                  top: "90px",
+                  left: "2.125rem",
+                }}
+              />
+            )}
             <Stack
               direction="row"
               alignItems="center"
               justifyContent={"space-between"}
-              mt={2}
+              mt={4}
             >
               <Typography gutterBottom variant="h5" component="div">
                 jj events
@@ -99,10 +179,15 @@ export const TeamPanel = () => {
                 component="label"
                 variant="contained"
                 startIcon={<CloudUploadIcon />}
+                color="warning"
                 sx={{ textTransform: "capitalize" }}
               >
-                Upload more pics
-                <VisuallyHiddenInput type="file" />
+                Upload profile
+                <VisuallyHiddenInput
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfileImageUpload}
+                />
               </Button>
             </Stack>
           </CardContent>
@@ -223,6 +308,20 @@ export const TeamPanel = () => {
           </Card>
         </Stack>
       </Stack>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={alert.open}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alert.type}
+          sx={{ width: "100%" }}
+        >
+          {alert.text}
+        </Alert>
+      </Snackbar>
     </TeamLayout>
   );
 };

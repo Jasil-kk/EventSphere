@@ -111,7 +111,6 @@ export const notificationDeleteApi = createAsyncThunk(
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
-    usersCount: "",
     allUsers: [],
     allTeams: [],
     singleTeam: {},
@@ -127,8 +126,7 @@ const adminSlice = createSlice({
       })
       .addCase(allUsersApi.fulfilled, (state, action) => {
         state.loading = false;
-        state.allUsers = action.payload.results;
-        state.usersCount = action.payload.count;
+        state.allUsers = action.payload?.results;
       })
       .addCase(allUsersApi.rejected, (state, action) => {
         state.loading = false;

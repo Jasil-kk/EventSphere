@@ -13,6 +13,7 @@ import { AllServices } from "./panels/TeamPanel/AllServices";
 import { Enquiries } from "./panels/TeamPanel/Enquiries";
 import { Notifications } from "./panels/TeamPanel/Notifications";
 import { Inbox } from "./panels/TeamPanel/Inbox";
+import { AllPictures } from "./panels/TeamPanel/AllPictures";
 
 function App() {
   const token = sessionStorage.getItem("token");
@@ -39,6 +40,7 @@ function App() {
           <Route path="/enquiries" element={<Enquiries />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/inbox" element={<Inbox />} />
+          <Route path="/allpictures" element={<AllPictures/>}/>
         </Routes>
       ) : (
         <Routes>

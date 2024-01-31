@@ -65,6 +65,15 @@ export const AllServices = () => {
 
   // Add Service Function
   const handleCreateService = async () => {
+    if (!data.service_name || !data.sub_catagory) {
+      setAlert({
+        open: true,
+        type: "warning",
+        text: "Please fill in all the fields.",
+      });
+      return;
+    }
+
     try {
       const response = await dispatch(addServicesApi(data));
       if (response.payload) {
@@ -239,7 +248,7 @@ export const AllServices = () => {
             alignItems={"center"}
           >
             <Typography variant="body1" component="div" color={"GrayText"}>
-              services is empty
+              No Services added. Click 'Add Service' Button to add Services.
             </Typography>
           </Stack>
         )}

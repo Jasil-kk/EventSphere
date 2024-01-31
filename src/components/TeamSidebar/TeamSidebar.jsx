@@ -9,6 +9,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import EmailIcon from "@mui/icons-material/Email";
+import BurstModeIcon from '@mui/icons-material/BurstMode';
 import { useNavigate, useLocation } from "react-router-dom";
 
 export const TeamSidebar = () => {
@@ -41,6 +42,15 @@ export const TeamSidebar = () => {
             <HandshakeIcon />
           </ListItemIcon>
           <ListItemText primary="All Services" />
+        </ListItemButton>
+        <ListItemButton
+          selected={isActive("/allpictures")}
+          onClick={() => navigate("/allpictures")}
+        >
+          <ListItemIcon>
+            <BurstModeIcon />
+          </ListItemIcon>
+          <ListItemText primary="All Pictures" />
         </ListItemButton>
         <ListItemButton
           selected={isActive("/enquiries")}

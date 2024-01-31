@@ -199,7 +199,7 @@ export const AllEventTeams = () => {
               </TableHead>
               <TableBody>
                 {allTeams?.map((team, index) => (
-                  <TableRow key={team?.id}>
+                  <TableRow key={index}>
                     <TableCell align="left">{index + 1}</TableCell>
                     <TableCell
                       align="left"

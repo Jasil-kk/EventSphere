@@ -223,7 +223,7 @@ export const Authentication = ({
             <Paper
               elevation={0}
               sx={{
-                width: teamRegistred ? "50%" : "40%",
+                width: teamRegistred ? "50%" : "50%",
                 height: teamRegistred ? 500 : 600,
               }}
             >
@@ -236,7 +236,7 @@ export const Authentication = ({
             <Paper
               elevation={0}
               sx={{
-                width: teamRegistred ? "50%" : "60%",
+                width: teamRegistred ? "50%" : "70%",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
