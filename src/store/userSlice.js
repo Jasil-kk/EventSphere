@@ -79,6 +79,17 @@ export const getPopularApi = createAsyncThunk(
   }
 );
 
+// Search Api
+export const SearchApi = createAsyncThunk(
+  "auth/SearchApi",
+  async ({ district, input }) => {
+    const response = await axiosApi.get(
+      `/store/service/?account__district=${district}&search=${input}`
+    );
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -86,6 +97,7 @@ const userSlice = createSlice({
     teamSingleView: {},
     reviews: [],
     populars: [],
+    searchResult: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -135,6 +147,18 @@ const userSlice = createSlice({
         state.populars = action.payload?.results;
       })
       .addCase(getPopularApi.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(SearchApi.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(SearchApi.fulfilled, (state, action) => {
+        state.loading = false;
+        state.searchResult = action.payload?.results;
+      })
+      .addCase(SearchApi.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

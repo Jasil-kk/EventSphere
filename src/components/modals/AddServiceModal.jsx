@@ -18,7 +18,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const AddServiceModal = ({ data,setData,open, handleClose, handleCreateService }) => {
+export const AddServiceModal = ({
+  data,
+  setData,
+  open,
+  handleClose,
+  handleCreateService,
+  disabled,
+}) => {
   const dispatch = useDispatch();
 
   const categories = useSelector((state) => state.admin.categories);
@@ -55,7 +62,11 @@ export const AddServiceModal = ({ data,setData,open, handleClose, handleCreateSe
             value={data.service_name}
             onChange={(e) => setData({ ...data, service_name: e.target.value })}
           />
-          <FormControl fullWidth color="secondary">
+          <FormControl
+            fullWidth
+            color="secondary"
+            disabled={disabled ? true : false}
+          >
             <InputLabel id="demo-simple-select-label">
               Select Category
             </InputLabel>
@@ -79,7 +90,11 @@ export const AddServiceModal = ({ data,setData,open, handleClose, handleCreateSe
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleCreateService} variant="contained" color="secondary">
+        <Button
+          onClick={handleCreateService}
+          variant="contained"
+          color="secondary"
+        >
           Add
         </Button>
       </DialogActions>

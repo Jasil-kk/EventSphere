@@ -15,6 +15,7 @@ export const loginApi = createAsyncThunk("auth/loginApi", async (input) => {
   const response = await axiosApi.post("/projectaccount/login/", input);
   sessionStorage.setItem("token", response.data.token);
   sessionStorage.setItem("role", response.data.role);
+  sessionStorage.setItem("team_name", response.data.team_name);
   sessionStorage.setItem("username", response.data.username);
   sessionStorage.setItem("id", response.data.pk);
   window.location.reload();

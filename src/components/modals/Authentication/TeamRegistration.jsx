@@ -3,6 +3,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -54,6 +58,23 @@ export const TeamRegistration = ({
   const handleSubmit = () => {
     handleTeamRegister(data);
   };
+
+  const districts = [
+    "Alappuzha",
+    "Ernakulam",
+    "Idukki",
+    "Kannur",
+    "Kasaragod",
+    "Kollam",
+    "Kottayam",
+    "Kozhikode",
+    "Malappuram",
+    "Palakkad",
+    "Pathanamthitta",
+    "Thiruvananthapuram",
+    "Thrissur",
+    "Wayanad",
+  ];
 
   return (
     <>
@@ -114,8 +135,8 @@ export const TeamRegistration = ({
           }}
         />
       </Stack>
-      <Stack direction={"row"} spacing={2} mt={2}>
-        <TextField
+      <Stack direction={"row"} spacing={2} mt={2} sx={{ width: "100%" }}>
+        {/* <TextField
           id="outlined-basic"
           label="District"
           variant="outlined"
@@ -125,7 +146,23 @@ export const TeamRegistration = ({
           autoComplete="off"
           value={data.district}
           onChange={(e) => setData({ ...data, district: e.target.value })}
-        />
+        /> */}
+        <FormControl color="secondary" fullWidth size="small">
+          <InputLabel id="demo-simple-select-label">District</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={data.district}
+            label="District"
+            onChange={(e) => setData({ ...data, district: e.target.value })}
+          >
+            {districts?.map((district, index) => (
+              <MenuItem key={index} value={district}>
+                {district}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           id="outlined-basic"
           label="Place"

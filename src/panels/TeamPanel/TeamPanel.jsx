@@ -50,6 +50,8 @@ export const TeamPanel = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const teamName = sessionStorage.getItem("team_name");
+
   const allservices = useSelector((state) => state.team.allServices);
   const allEnquiries = useSelector((state) => state.team.enquiries);
   const allNotifications = useSelector((state) => state.team.notifications);
@@ -172,8 +174,13 @@ export const TeamPanel = () => {
               justifyContent={"space-between"}
               mt={4}
             >
-              <Typography gutterBottom variant="h5" component="div">
-                jj events
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                textTransform={"capitalize"}
+              >
+                {teamName}
               </Typography>
               <Button
                 component="label"

@@ -24,8 +24,16 @@ export const deleteServicesApi = createAsyncThunk(
   "auth/deleteServicesApi",
   async (serviceId) => {
     const response = await axiosApi.delete(`/store/service/${serviceId}/`);
-    console.log(response);
     return response;
+  }
+);
+
+// Edit Service Api
+export const editServicesApi = createAsyncThunk(
+  "auth/editServicesApi",
+  async ({ serviceId, input }) => {
+    const response = await axiosApi.put(`/store/service/${serviceId}/`, input);
+    return response.data;
   }
 );
 

@@ -70,7 +70,7 @@ export const Popular = () => {
                     : popular?.account_view?.over_view}
                 </Typography>
               </CardContent>
-              <CardActions disableSpacing>
+              <CardActions>
                 <Rating
                   name="half-rating-read"
                   defaultValue={popular?.avg_ratings}

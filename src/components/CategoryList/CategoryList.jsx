@@ -146,7 +146,7 @@ export const CategoryList = () => {
                       {team?.account_view?.address}
                     </p>
                     <p className={classes.work_time}>
-                      {team?.account_view?.address}
+                      {team?.account_view?.work_time}
                     </p>
                   </div>
                   <div className={classes.card_end}>

@@ -8,12 +8,11 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 export const TeamSingleView = ({ singleTeam, toggleDrawer, open }) => {
-
   const list = () => (
     <Box sx={{ width: 550 }} role="presentation">
       <List sx={{ padding: "1rem 1.5rem" }}>
         <Avatar
-          alt="Team"
+          alt={singleTeam?.team_name}
           src={singleTeam?.profile}
           sx={{ width: 60, height: 60 }}
         />

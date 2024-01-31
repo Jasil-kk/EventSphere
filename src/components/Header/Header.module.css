@@ -12,6 +12,7 @@
 .logo {
   font-size: 1.25rem;
   color: var(--purple-color);
+  cursor: pointer;
 }
 nav .nav_item_container {
   list-style: none;

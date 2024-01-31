@@ -20,6 +20,7 @@ import {
   addServicesApi,
   allServicesApi,
   deleteServicesApi,
+  editServicesApi,
 } from "../../store/teamSlice";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -33,6 +34,12 @@ export const AllServices = () => {
   const [addService, setAddService] = useState(false);
   const [serviceId, setServiceId] = useState("");
   const [data, setData] = useState({ service_name: "", sub_catagory: "" });
+  const [editData, setEditData] = useState({
+    service_name: "",
+    sub_catagory: "",
+  });
+  const [editModal, setEditModal] = useState(false);
+
   const dispatch = useDispatch();
 
   const allServices = useSelector((state) => state.team.allServices);
@@ -61,6 +68,15 @@ export const AllServices = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleOpenEditModal = ({ serviceId, serviceName, category }) => {
+    setEditModal(true);
+    setServiceId(serviceId);
+    setEditData({ service_name: serviceName, sub_catagory: category });
+  };
+  const handleCloseEditModal = () => {
+    setEditModal(false);
   };
 
   // Add Service Function
@@ -129,6 +145,45 @@ export const AllServices = () => {
         open: true,
         type: "error",
         text: "Deleting Service failed. Please try again.",
+      });
+    }
+  };
+
+  // Edit Service Function
+  const handleEditService = async () => {
+    if (!editData.service_name || !editData.sub_catagory) {
+      setAlert({
+        open: true,
+        type: "warning",
+        text: "Please fill in all the fields.",
+      });
+      return;
+    }
+
+    try {
+      const response = await dispatch(
+        editServicesApi({ serviceId: serviceId, input: editData })
+      );
+      if (response.payload) {
+        setAlert({
+          open: true,
+          type: "success",
+          text: "Service Updated successfully!",
+        });
+        dispatch(allServicesApi());
+        handleCloseEditModal();
+      } else {
+        setAlert({
+          open: true,
+          type: "error",
+          text: "Updating Service failed",
+        });
+      }
+    } catch (error) {
+      setAlert({
+        open: true,
+        type: "error",
+        text: "Updating Service failed. Please try again.",
       });
     }
   };
@@ -222,7 +277,13 @@ export const AllServices = () => {
                         aria-label="delete"
                         size="medium"
                         color="info"
-                        onClick={handleAddService}
+                        onClick={() =>
+                          handleOpenEditModal({
+                            serviceId: service?.id,
+                            serviceName: service?.service_name,
+                            category: service?.sub_catagory,
+                          })
+                        }
                       >
                         <EditIcon />
                       </IconButton>
@@ -279,6 +340,14 @@ export const AllServices = () => {
         handleAccept={handleDeleteService}
         handleClose={handleClose}
         text="Are you sure you want to delete this Service?"
+      />
+      <AddServiceModal
+        disabled={true}
+        data={editData}
+        setData={setEditData}
+        open={editModal}
+        handleCreateService={handleEditService}
+        handleClose={handleCloseEditModal}
       />
     </TeamLayout>
   );

@@ -32,7 +32,7 @@ export const Header = () => {
   return (
     <>
       <header className={classes.header}>
-        <h2 className={classes.logo}>EventSphere</h2>
+        <h2 className={classes.logo} onClick={()=>navigate("/")}>EventSphere</h2>
         {role !== "admin" && role !== "event_management" && (
           <nav>
             <ul className={classes.nav_item_container}>

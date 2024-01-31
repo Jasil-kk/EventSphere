@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import classes from "./SingleViewCard.module.css";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
@@ -305,9 +306,30 @@ export const SingleViewCard = () => {
             <Typography variant="body2" color="CaptionText">
               {singleView?.service_name}
             </Typography>
-            <Typography variant="body2" color="text.secondary" mt="1rem">
-              photos:
-            </Typography>
+            {singleView?.profile && singleView?.profile.length > 0 && (
+              <>
+                <Typography variant="body2" color="text.secondary" mt="1rem">
+                  photos:
+                </Typography>
+
+                <ImageList
+                  sx={{ width: 500, height: 450, marginTop: 1 }}
+                  cols={3}
+                  rowHeight={164}
+                >
+                  {singleView?.profile?.map((picture) => (
+                    <ImageListItem key={picture?.id}>
+                      <img
+                        srcSet={`${picture?.url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        src={`${picture?.url}?w=164&h=164&fit=crop&auto=format`}
+                        alt={picture?.url}
+                        loading="lazy"
+                      />
+                    </ImageListItem>
+                  ))}
+                </ImageList>
+              </>
+            )}
           </CardContent>
         </Card>
 
