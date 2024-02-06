@@ -3,10 +3,9 @@ import classes from "./Header.module.css";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { Authentication } from "../modals/Authentication/Authentication";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutApi } from "../../store/authSlice";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const [isRegistered, setIsRegistered] = useState(true);
@@ -16,7 +15,6 @@ export const Header = () => {
   const token = sessionStorage.getItem("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -32,7 +30,9 @@ export const Header = () => {
   return (
     <>
       <header className={classes.header}>
-        <h2 className={classes.logo} onClick={()=>navigate("/")}>EventSphere</h2>
+        <h2 className={classes.logo} onClick={() => navigate("/")}>
+          EventSphere
+        </h2>
         {role !== "admin" && role !== "event_management" && (
           <nav>
             <ul className={classes.nav_item_container}>

@@ -19,7 +19,6 @@ function App() {
   const token = sessionStorage.getItem("token");
   const role = sessionStorage.getItem("role");
 
-  
   return (
     <div className="App">
       {token && role === "admin" ? (
@@ -40,13 +39,16 @@ function App() {
           <Route path="/enquiries" element={<Enquiries />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/inbox" element={<Inbox />} />
-          <Route path="/allpictures" element={<AllPictures/>}/>
+          <Route path="/allpictures" element={<AllPictures />} />
         </Routes>
       ) : (
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/companylist/:categoyId" element={<CompanyList />} />
-          <Route path="/singleview/:categoryId/:teamId/:accountId" element={<SingleView />} />
+          <Route
+            path="/singleview/:categoryId/:teamId/:accountId"
+            element={<SingleView />}
+          />
         </Routes>
       )}
     </div>

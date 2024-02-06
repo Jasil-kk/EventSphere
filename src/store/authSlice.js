@@ -11,16 +11,20 @@ export const registerApi = createAsyncThunk(
 );
 
 // Login Api
-export const loginApi = createAsyncThunk("auth/loginApi", async (input) => {
-  const response = await axiosApi.post("/projectaccount/login/", input);
-  sessionStorage.setItem("token", response.data.token);
-  sessionStorage.setItem("role", response.data.role);
-  sessionStorage.setItem("team_name", response.data.team_name);
-  sessionStorage.setItem("username", response.data.username);
-  sessionStorage.setItem("id", response.data.pk);
-  window.location.reload();
-  return response.data;
-});
+export const loginApi = createAsyncThunk(
+  "auth/loginApi",
+  async ({ input, navigate }) => {
+    const response = await axiosApi.post("/projectaccount/login/", input);
+    sessionStorage.setItem("token", response.data.token);
+    sessionStorage.setItem("role", response.data.role);
+    sessionStorage.setItem("team_name", response.data.team_name);
+    sessionStorage.setItem("username", response.data.username);
+    sessionStorage.setItem("id", response.data.pk);
+    navigate("/");
+    window.location.reload();
+    return response.data;
+  }
+);
 
 // Team Registration Api
 export const teamRegisterApi = createAsyncThunk(
@@ -51,14 +55,7 @@ const authSlice = createSlice({
   initialState: {
     isAuthenticated: false,
   },
-  reducers: {
-    loginUser: (state, action) => {
-      state.isAuthenticated = true;
-    },
-    logoutUser: (state) => {
-      state.isAuthenticated = false;
-    },
-  },
+  reducers: {},
 });
 
 export const { loginUser, logoutUser } = authSlice.actions;

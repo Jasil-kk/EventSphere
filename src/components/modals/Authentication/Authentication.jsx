@@ -7,6 +7,7 @@ import nature from "../../../assets/nature.jpg";
 import { LoginPage } from "./LoginPage";
 import { RegisterPage } from "./RegisterPage";
 import { useDispatch } from "react-redux";
+import {useNavigate} from "react-router-dom"
 import {
   loginApi,
   registerApi,
@@ -40,6 +41,7 @@ export const Authentication = ({
   setTeamRegistered,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [alert, setAlert] = useState({ open: false, type: "info", text: "" });
 
@@ -104,7 +106,7 @@ export const Authentication = ({
       return;
     }
     try {
-      const response = await dispatch(loginApi(data));
+      const response = await dispatch(loginApi({input:data,navigate:navigate}));
       if (response.payload && response.payload.response) {
         setAlert({
           open: true,

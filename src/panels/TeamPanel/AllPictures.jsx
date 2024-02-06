@@ -78,6 +78,7 @@ export const AllPictures = () => {
         });
         dispatch(teamPicturesGetApi());
         handleClicklClose();
+        setSelectedImage(null);
       } else {
         setAlert({
           open: true,

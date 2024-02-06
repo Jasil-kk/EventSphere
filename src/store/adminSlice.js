@@ -102,7 +102,7 @@ export const notificationDeleteApi = createAsyncThunk(
   "auth/notificationDeleteApi",
   async (notificationID) => {
     const response = await axiosApi.delete(
-      `/store/notification/${notificationID}`
+      `/store/notification/${notificationID}/`
     );
     return response;
   }
